@@ -26,7 +26,11 @@ sudo apt-get install qt5-default
 For ps3-driver:
 sudo apt-get install libusb-dev
 
+Finally:
+catkin build -DCMAKE_BUILD_TYPE=Release
+
 ##Using
+
 roslaunch arc_launch arc.launch Name:=(Desired path to created files) Mode:=(false [Teach] or true [Repeat])
 
 
