@@ -1,9 +1,8 @@
 # arc_final
 
-Final code of project ARC, used to climb the Swiss Klausenpass autonomously with the Teach and Repeat method, including a state estimation,. control and obstacle detection software as well as an VCU interface.
+Final code of project ARC, used to climb the Swiss Klausenpass autonomously with the mainly vision-based Teach and Repeat method, including a state estimation, control and obstacle detection software as well as an VCU interface.
 
 Tested on Ubuntu 14.04 and utilising the ROS-Framework.
-
 
 
 ## Installation

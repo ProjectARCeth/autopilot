@@ -9,8 +9,8 @@
    uri: https://github.com/ProjectARCeth/ublox
 - git:
    local-name: rovio
-   uri: https://github.com/ethz-asl/rovio
-   version: feature/velocityUpdate
+   uri: https://github.com/ProjectARCeth/rovio
+   version: arc
 - git:
    local-name: kindr
    uri: https://github.com/ethz-asl/kindr
