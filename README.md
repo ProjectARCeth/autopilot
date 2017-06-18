@@ -2,7 +2,7 @@
 
 Final code of project ARC, used to climb the Swiss Klausenpass autonomously with the mainly vision-based Teach and Repeat method, including a state estimation, control and obstacle detection software as well as an VCU interface.
 
-Tested on Ubuntu 14.04 and utilising the ROS-Framework.
+Tested on Ubuntu 14.04 and utilising the ROS-Framework. For state estimation the ORB SLAM 2(Raul Mur-Artal) and ROVIO (Michael Bloesch) software is used.
 
 
 ## Installation
