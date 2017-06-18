@@ -8,20 +8,11 @@ Tested on Ubuntu 14.04 and utilising the ROS-Framework.
 
 ## Installation
 
-Further driver: 
-- ackermann_msgs
-- catkin_simple
-- eigen_catkin
-- joystick_drivers
-- libvisensor-devel
-- velodyne
-- visensor_node_devel
-
 Use following commands on the terminal before building the package:
 
 wstool init
 
-wstool merge arc_launch/dependencies.rosinstall 
+wstool merge arc_final/dependencies.rosinstall 
 
 wstool update
 
