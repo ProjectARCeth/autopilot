@@ -1,0 +1,73 @@
+- git:
+   local-name: arc_launch
+   uri: https://github.com/ProjectARCeth/arc_launch
+- git:
+   local-name: ackermann_msgs
+   uri: https://github.com/ros-drivers/ackermann_msgs
+- git:
+   local-name: arc_msgs
+   uri: https://github.com/ProjectARCeth/arc_msgs
+- git:
+   local-name: arc_tools
+   uri: https://github.com/ProjectARCeth/arc_tools
+   version: new
+- git:
+   local-name: arc_interface
+   uri: https://github.com/ProjectARCeth/arc_interface
+   version: master
+- git:
+   local-name: arc_viewer
+   uri: https://github.com/ProjectARCeth/arc_viewer
+- git:
+   local-name: arc_obstacle_detection
+   uri: https://github.com/ProjectARCeth/arc_obstacle_detection
+   version: 2_Filter
+- git:
+   local-name: arc_state_estimation
+   uri: https://github.com/ProjectARCeth/arc_state_estimation
+   version: fixLOOP
+- git:
+   local-name: joystick-drivers
+   uri: https://github.com/ProjectARCeth/joystick_drivers
+- git:
+   local-name: ublox
+   uri: https://github.com/ProjectARCeth/ublox
+- git:
+   local-name: pure_pursuit_controller
+   uri: https://github.com/ProjectARCeth/pure_pursuit_controller
+   version: Implementation
+- git:
+   local-name: guard
+   uri: https://github.com/ProjectARCeth/guard
+   version: simons_guard
+- git:
+   local-name: rovio
+   uri: https://github.com/ethz-asl/rovio
+   version: feature/velocityUpdate
+- git:
+   local-name: kindr
+   uri: https://github.com/ethz-asl/kindr
+- git:
+   local-name: visensor_node_devel
+   uri: https://github.com/ethz-asl/visensor_node_devel
+- git: 
+   local-name: velodyne
+   uri: https://github.com/ros-drivers/velodyne
+- git:
+   local-name: eigen_catkin 
+   uri: https://github.com/ethz-asl/eigen_catkin
+- git:
+   local-name: libvisensor 
+   uri: https://github.com/ethz-asl/libvisensor_devel
+- git:
+   local-name: catkin_simple 
+   uri: https://github.com/catkin/catkin_simple
+- git:
+   local-name: RSLAM
+   uri: https://github.com/ProjectARCeth/RSLAM
+   version: 2.FastMapLoad
+- git:
+   local-name: usb_cam
+   uri: https://github.com/ProjectARCConeDetection/usb_cam
+   version: arc
+

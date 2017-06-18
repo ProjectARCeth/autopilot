@@ -1,0 +1,7 @@
+<launch>
+
+
+  <node pkg="guard" name="gridAnalyser_node" type="gridAnalyser_node" output="screen">
+  </node>
+
+</launch>

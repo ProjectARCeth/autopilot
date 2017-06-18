@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package>
+  <name>guard</name>
+  <version>0.0.0</version>
+  <description>Guard package</description>
+
+  <maintainer email="robin@todo.todo">robin</maintainer>
+
+  <license>TODO</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>catkin_simple</run_depend>
+  
+
+
+  
+  <export>
+   
+
+  </export>
+</package>

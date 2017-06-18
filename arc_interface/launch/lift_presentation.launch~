@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>	
+	
+<launch>
+
+  <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
+ <!-- starting NI client -->
+ <node name="lift_presentation" type="lift_presentation" pkg="arc_interface" output="screen" required="true"/>
+ <!-- starting stellgroessen bag -->
+<node pkg="rosbag" type="play" name="player" output="screen" args="--clock /home/nico/Schreibtisch/GA1_stellgroessen.bag" />
+
+</launch>
+
+

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>	
+	
+<launch>
+
+  <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
+
+  <!-- Sensors -->
+  <arg name="GPS" value="false" />
+  <arg name="VI" value="true" /> 
+  <arg name="VELODYNE" value="false" />
+  <!-- Localisation and state estimation -->
+  <arg name="STATE_ESTIMATION" value="true"/>
+  <!-- Steering and velocity controlling -->
+  <arg name="CONTROLLING" value="false" />
+  <!-- External communication -->
+  <arg name="NI_CLIENT" value="false"/>
+  <arg name="PS_CONTROLLER" value="false"/>
+  <!-- Safety -->
+  <arg name="OBSTACLE_DETECTION" value="false"/> 
+  <arg name="GUARD" value="false"/>
+  <!-- Visualisation -->
+  <arg name="GUI" value="true"/>
+  <arg name="ORB_VISUALISATION" value="true"/>
+  <arg name="PDF" value="false"/>
+  <arg name="VOICE" value="false"/>
+  <!-- Rosbag -->
+  <arg name="ROSBAG_PLAY" value="false"/> 
+ 
+  <!-- Launch parameters: Name = name of testing, Mode = teach(false), repeat(true), Path_Length =  length of drivable path from beginning -->
+  <arg name="Name" default="/home/arcsystem/paths/test" />
+  <arg name="Mode" default="true" /> 
+  <arg name="Path_Length" default="full" /> 
+  <arg name="Button_Start" default="true" />
+
+ <!-- Preparation -->
+
+ <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING) $(arg Button_Start)" />
+
+  <!-- GPS -->
+  <node name="gps" pkg="ublox_gps" type="ublox_gps" output="screen" if="$(arg GPS)">
+  	 <param name="device" type="string" value="/dev/ttyACM0"/>
+   	 <param name="frame_id" type="string" value="gps"/>
+   	 <param name="baudrate" type="int" value="9600"/>
+   	 <param name="rate" type="int" value="10"/>
+   	 <param name="enable_sbas" type="bool" value="false"/>
+   	 <param name="dynamic_model" type="string" value="portable"/>
+    	 <param name="fix_mode" type="string" value="both"/>
+   	 <param name="dr_limit" type="int" value="0"/>
+   	 <param name="enable_beidou" type="bool" value="false"/>
+    	 <param name="enable_glonass" type="bool" value="false"/>
+   	 <param name="enable_ppp" type="bool" value="false"/>
+   	 <param name="ublox_version" type="int" value="8"/>
+   	 <param name="initializing_samples" type="int" value="50"/>
+  </node>
+  <!-- VI - Sensor -->
+  <node name="visensor_node" pkg="visensor_node" type="visensor_node" output="screen" if="$(arg VI)" />
+  <!-- Velodyne - Laser - Sensor -->
+  <group if="$(arg VELODYNE)">
+  	<arg name="calibration" default="$(find velodyne_pointcloud)/params/VLP16db.yaml"/>
+  	<arg name="device_ip" default="" />
+  	<arg name="frame_id" default="velodyne" />
+  	<arg name="manager" default="$(arg frame_id)_nodelet_manager" />
+  	<arg name="max_range" default="130.0" />
+  	<arg name="min_range" default="0.4" />
+  	<arg name="pcap" default="" />
+  	<arg name="port" default="2368" />
+  	<arg name="read_fast" default="false" />
+  	<arg name="read_once" default="false" />
+  	<arg name="repeat_delay" default="0.0" />
+  	<arg name="rpm" default="600.0" />
+  	<include file="$(find velodyne_driver)/launch/nodelet_manager.launch">
+    	<arg name="device_ip" value="$(arg device_ip)"/>
+    	<arg name="frame_id" value="$(arg frame_id)"/>
+    	<arg name="manager" value="$(arg manager)" />
+    	<arg name="model" value="VLP16"/>
+    	<arg name="pcap" value="$(arg pcap)"/>
+    	<arg name="port" value="$(arg port)"/>
+    	<arg name="read_fast" value="$(arg read_fast)"/>
+    	<arg name="read_once" value="$(arg read_once)"/>
+    	<arg name="repeat_delay" value="$(arg repeat_delay)"/>
+   	<arg name="rpm" value="$(arg rpm)"/>
+ 	</include>
+  	<include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+   	<arg name="calibration" value="$(arg calibration)"/>
+    	<arg name="manager" value="$(arg manager)" />
+    	<arg name="max_range" value="$(arg max_range)"/>
+    	<arg name="min_range" value="$(arg min_range)"/>
+  	</include>
+  </group>
+
+  <!-- starting state estimation node -->
+
+  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" args="$(arg Name) $(arg Mode)" if="$(arg STATE_ESTIMATION)" required="true"/> 
+  <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER Reuse-Map Map-Name)--> 
+  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt  $(find orb_slam2)/../../Stereo/ARC_old.yaml $(arg ORB_VISUALISATION) $(arg Mode) $(arg Name) $(arg Name)" output="screen" if="$(arg STATE_ESTIMATION)" >
+  	<remap from="/camera/left/image_raw" to="/cam0/image_raw"/>
+  	<remap from="/camera/right/image_raw" to="/cam1/image_raw"/>
+  </node>
+  <!-- starting Rovio -->
+  <node pkg="rovio" type="rovio_node" name="rovio" output="screen" if="$(arg STATE_ESTIMATION)">
+   <param name="filter_config" value="$(find rovio)/cfg/arc_oldWS.info"/>
+   <param name="camera0_config" value="$(find rovio)/cfg/rovio_cam0.yaml"/>
+   <param name="camera1_config" value="$(find rovio)/cfg/rovio_cam1.yaml"/>
+  </node> 
+
+  <!-- Controlling and Safety: Only teach software -->
+    <group if="$(arg Mode)"> 
+        <!--starting Guard -->
+	<node name="high_level_guard" pkg="guard" type="high_level_guard" output="screen" args="$(arg GUARD)" /> 
+  	<!--starting obstacle-detection -->
+  	<node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen" if="$(arg OBSTACLE_DETECTION)"/>
+ 	   <node name="grid_analyser_node" pkg="grid_analyser" type="grid_analyser_node" output="screen" args="$(arg Name)" if="$(arg OBSTACLE_DETECTION)" />
+ 	 <!--starting Controlling -->
+  	<node name="regler_node" pkg="pure_pursuit_controller" type="regler_node" output="screen"  args="$(arg Name)" if="$(arg CONTROLLING)" />
+  </group>
+	
+ <!-- starting NI client -->
+ <node name="udp_client" type="udp_client" pkg="arc_interface" output="screen" args="$(arg ROSBAG_PLAY)" if="$(arg NI_CLIENT)" />
+
+  <!-- starting GUI -->
+  <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" args="$(arg Mode) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING)" if="$(arg GUI)" />	
+  <!-- starting PS-Controller -->
+  <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" if="$(arg PS_CONTROLLER)" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+  </node>
+  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" if="$(arg PS_CONTROLLER)" >
+    <rosparam command="load" file="$(find ps3joy)/diagnostics.yaml" />
+  </node>
+  <node name="ps_control" type="ps_control" pkg="arc_viewer" output="screen" if="$(arg PS_CONTROLLER)" />
+  <!-- PDF analysis -->
+  <node name="pdf_analyse" pkg="arc_viewer" type="pdf_analyse.py" output="screen" args="$(arg Name)" if="$(arg PDF)" />
+  <!-- Voice Callback -->
+  <node name="arc_voice" pkg="arc_viewer" type="play_voice.py" output="screen" if="$(arg VOICE)" />
+
+
+</launch>
+
+

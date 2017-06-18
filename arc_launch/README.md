@@ -1,21 +1,6 @@
-# arc_final
-
-Final code of project ARC, used to climb the Swiss Klausenpass autonomously with the Teach and Repeat method, including a state estimation,. control and obstacle detection software as well as an VCU interface.
-
-Tested on Ubuntu 14.04 and utilising the ROS-Framework.
-
-
+# arc_launch
 
 ## Installation
-
-Further driver: 
-- ackermann_msgs
-- catkin_simple
-- eigen_catkin
-- joystick_drivers
-- libvisensor-devel
-- velodyne
-- visensor_node_devel
 
 Use following commands on the terminal before building the package:
 
@@ -33,10 +18,15 @@ For arc_viewer:
 
 sudo apt-get install qt5-default
 
+wget http://download.qt.io/official_releases/qt/5.7/5.7.0/qt-opensource-linux-x64-5.7.0.run
+
+chmod +x qt-opensource-linux-x64-5.7.0.run
+
+./qt-opensource-linux-x64-5.7.0.run
+
 For ps3-driver:
 sudo apt-get install libusb-dev
 
 ##Using
 roslaunch arc_launch arc.launch Name:=(Desired path to created files) Mode:=(false [Teach] or true [Repeat])
-
 
